@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { getFolders ,createFolder} from "../utils/apis";
 
 const CreateFolder = () => {
     const [folderName, setFolderName] = useState("");
@@ -12,9 +13,7 @@ const CreateFolder = () => {
     useEffect(() => {
         const fetchFolders = async () => {
             try {
-                const response = await axios.get("http://localhost:5000/api/folders", {
-                    withCredentials: true, // Ensures cookies (JWT) are sent
-                });
+                const response = await getFolders()
                 setFolders(response.data.data); // Assuming response has a `data` object
             } catch (error) {
                 console.error("Error fetching folders:", error);
@@ -33,16 +32,11 @@ const CreateFolder = () => {
         }
 
         setLoading(true);
-
         try {
-            const response = await axios.post(
-                "http://localhost:5000/api/folders",
-                { name: folderName, parentFolder: parentFolder || null }, // Send parentFolder only if selected
-                {
-                    withCredentials: true, // Send authentication cookies
-                    headers: { "Content-Type": "application/json" }
-                }
-            );
+            const response = await createFolder({
+                name: folderName,
+                parentFolder: parentFolder || null
+            });
 
             alert(response.data.message);
             setFolderName(""); // Reset input

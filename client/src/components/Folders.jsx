@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { getFolders } from "../utils/apis";
 
 const Folders = ({ folders: initialFolders }) => {
     const [folders, setFolders] = useState(initialFolders || []);
@@ -9,9 +10,7 @@ const Folders = ({ folders: initialFolders }) => {
         if (!initialFolders) {
             const fetchFolders = async () => {
                 try {
-                    const response = await axios.get("http://localhost:5000/api/folders", {
-                        withCredentials: true,
-                    });
+                    const response=await getFolders()
                     setFolders(response.data.data);
                 } catch (error) {
                     console.error("Error fetching folders:", error);
